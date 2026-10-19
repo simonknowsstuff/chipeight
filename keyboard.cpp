@@ -26,6 +26,6 @@ Keyboard::Keyboard() {
     };
 }
 
-bool Keyboard::is_key_pressed(const int key_code) const {
+bool Keyboard::is_key_pressed(const int key_code) {
     return keys_pressed[key_code];
 }
