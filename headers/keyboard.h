@@ -8,9 +8,9 @@
 
 class Keyboard {
 public:
-    std::vector<int> keysPressed = {};
+    std::vector<int> keys_pressed = {};
 
-    bool isKeyPressed(int keyCode);
+    bool is_key_pressed(int key_code);
 };
 
 #endif //KEYBOARD

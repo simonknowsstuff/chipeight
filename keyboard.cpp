@@ -3,7 +3,7 @@
 #include <SDL3/SDL_keyboard.h>
 
 class Keyboard {
-    std::vector<int> keysPressed = {};
+    std::vector<int> keys_pressed = {};
 
     Keyboard() {
         const std::map<int, int> KEYMAP = {
@@ -26,7 +26,7 @@ class Keyboard {
         };
     }
 
-    bool isKeyPressed(const int keyCode) const {
-        return keysPressed[keyCode];
+    bool is_key_pressed(const int key_code) const {
+        return keys_pressed[key_code];
     }
 };

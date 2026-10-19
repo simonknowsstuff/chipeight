@@ -10,8 +10,8 @@ class CPU {
     uint16_t i = 0;             // 1 16-bit register
     std::stack<int> stack = {}; // Stack
     uint16_t pc = 0x200;        // Program counter
-    uint8_t delayTimer = 0;
-    uint8_t soundTimer = 0;
+    uint8_t delay_timer = 0;
+    uint8_t sound_timer = 0;
     int speed = 10;
     bool paused = false;
 
@@ -24,9 +24,9 @@ class CPU {
         }
     }
 
-    void loadProgramIntoMemory(std::vector<uint8_t>& program) {
-        size_t programSize = program.size();
-        for (int loc = 0; loc < programSize; loc++) {
+    void load_program_into_memory(std::vector<uint8_t>& program) {
+        size_t program_size = program.size();
+        for (int loc = 0; loc < program_size; loc++) {
             memory[0x200 + loc] = program[loc];
         }
     }
@@ -42,11 +42,11 @@ class CPU {
     }
 
     void updateTimers() {
-        if (delayTimer > 0)
-            delayTimer--;
+        if (delay_timer > 0)
+            delay_timer--;
 
-        if (soundTimer > 0)
-            soundTimer--;
+        if (sound_timer > 0)
+            sound_timer--;
     }
 
     void loadSpritesIntoMemory() {
@@ -195,15 +195,15 @@ class CPU {
                 case 0xF000:
                     switch (opcode & 0xFF) {
                         case 0x07: // LD Vx, DT
-                            v[x] = delayTimer;
+                            v[x] = delay_timer;
                             break;
                         case 0x0A: // TODO: LD Vx, K
                             break;
                         case 0x15: // LD DT, Vx
-                            delayTimer = v[x];
+                            delay_timer = v[x];
                             break;
                         case 0x18: // LD ST, Vx
-                            soundTimer = v[x];
+                            sound_timer = v[x];
                             break;
                         case 0x1E: // ADD I, Vx
                             i += v[x];

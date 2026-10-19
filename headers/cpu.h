@@ -11,17 +11,17 @@ private:
     uint16_t i = 0;
     std::stack<int> stack = {};
     uint16_t pc = 0x200;
-    uint8_t delayTimer = 0;
-    uint8_t soundTimer = 0;
+    uint8_t delay_timer = 0;
+    uint8_t sound_timer = 0;
 
 public:
     int speed = 10;
     bool paused = false;
 
     void cycle();
-    void loadProgramIntoMemory(std::vector<uint8_t>& program);
-    void updateTimers();
-    void executeInstruction(uint16_t opcode);
+    void load_program_into_memory(std::vector<uint8_t>& program);
+    void update_timers();
+    void execute_instruction(uint16_t opcode);
 };
 
 #endif //CPU_H
