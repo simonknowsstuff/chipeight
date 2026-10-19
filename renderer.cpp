@@ -6,9 +6,20 @@
 
 class Renderer {
     std::array<std::array<int, COLS>, ROWS> display = {};
+    int window_height = COLS;
+    int window_width = ROWS;
 
     Renderer(int scale) {
-        const int WINDOW_HEIGHT = scale * ROWS;
-        const int WINDOW_WIDTH = scale * COLS;
+        window_height = scale * ROWS;
+        window_width = scale * COLS;
+
+        if (!SDL_Init(SDL_INIT_VIDEO)) {
+            std::cerr << "SDL_Init failed: " << SDL_GetError() << std::endl;
+
+        }
+    }
+
+    void render() {
+
     }
 };
