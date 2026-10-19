@@ -2,6 +2,7 @@
 #include <cstdint>
 #include <random>
 #include <stack>
+#include <iterator>
 
 class CPU {
     uint8_t memory[4096] = {};  // 4 KB memory
@@ -23,8 +24,8 @@ class CPU {
         }
     }
 
-    void loadProgramIntoMemory(const uint8_t program[]) {
-        constexpr int programSize = sizeof(program) / sizeof(program[0]);
+    void loadProgramIntoMemory(std::vector<uint8_t>& program) {
+        size_t programSize = program.size();
         for (int loc = 0; loc < programSize; loc++) {
             memory[0x200 + loc] = program[loc];
         }
