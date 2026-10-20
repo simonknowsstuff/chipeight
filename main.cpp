@@ -9,6 +9,7 @@ int main() {
 
     // Main loop
     while (true) {
+        cpu.cycle();
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
             // Let input handle all events

@@ -8,14 +8,14 @@
 
 class CPU {
 private:
-    uint8_t memory[4096] = {}; // 4 KB memory
-    uint8_t v[16] = {}; // 16 8-bit registers
+    std::array<uint8_t, 4096> memory = {}; // 4 KB memory
+    std::array<uint8_t, 16> v = {}; // 16 8-bit registers
     uint16_t i = 0; // 1 16-bit register
     std::stack<int> stack = {}; // Stack
     uint16_t pc = 0x200; // Program counter
     uint8_t delay_timer = 0;
     uint8_t sound_timer = 0;
-    int speed = 10;
+    int speed = 60;
     bool paused = false;
     Renderer &_renderer;
     Input &_input;
@@ -29,7 +29,7 @@ public:
 
     void load_sprites_into_memory();
 
-    void load_rom();
+    std::vector<uint8_t> load_rom(const char* filename);
 
     void play_sound();
 

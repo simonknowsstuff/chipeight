@@ -57,9 +57,6 @@ void Renderer::clear_display() {
 
 int Renderer::set_pixel(const int x, const int y) {
     // Draw a white pixel in the given (x, y) coordinates
-    // SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    // const SDL_FRect rect { .x = static_cast<float>(x), .y = static_cast<float>(y), .w = 1, .h = 1 };
-    // SDL_RenderRect(renderer, &rect);
     int _x = x;
     int _y = y;
     // Wrap around coordinates if they are out of bounds

@@ -1,6 +1,8 @@
 #include "headers/cpu.h"
 #include <array>
 #include <cstdint>
+#include <fstream>
+#include <iostream>
 #include <random>
 #include <stack>
 #include <iterator>
@@ -23,14 +25,17 @@ void CPU::cycle() {
 void CPU::load_program_into_memory(const std::vector<uint8_t> &program) {
     // I've considered the program to be loaded as a big vector for now
     // Read every line in the program and load it into memory
-    const size_t program_size = program.size();
-    for (int loc = 0; loc < program_size; loc++) {
-        memory[0x200 + loc] = program[loc];
+    constexpr size_t START_ADDRESS = 0x200;
+    if (program.size() > memory.size() - START_ADDRESS) {
+        throw std::runtime_error("ROM too large for CHIP-8 memory");
+    }
+    for (size_t loc = 0; loc < program.size(); loc++) {
+        memory[START_ADDRESS + loc] = program[loc];
     }
 }
 
 // TODO: Implement loading ROM
-void CPU::load_rom() {
+std::vector<uint8_t> CPU::load_rom(const char* filename) {
 }
 
 // TODO: Implement playing sound
@@ -249,12 +254,12 @@ void CPU::execute_instruction(const uint16_t opcode) {
                     memory[i + 2] = v[x] % 10;
                     break;
                 case 0x55: // LD [I], Vx
-                    for (int r = 0; r <= x; r++) {
+                    for (uint8_t r = 0; r <= x; r++) {
                         memory[i + r] = v[r];
                     }
                     break;
                 case 0x65: // LD Vx, [I]
-                    for (int r = 0; r <= x; r++) {
+                    for (uint8_t r = 0; r <= x; r++) {
                         v[r] = memory[i + r];
                     }
                     break;
