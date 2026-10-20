@@ -6,18 +6,22 @@
 
 class Renderer {
 private:
-    std::array<std::array<int, ROWS>, COLS> display = {};   // Display buffer
-    int window_height = COLS;                               // Window height
-    int window_width = ROWS;                                // Window width
-    float scale;                                            // Scale value
+    std::array<std::array<int, ROWS>, COLS> display = {}; // Display buffer
+    int window_height = COLS; // Window height
+    int window_width = ROWS; // Window width
+    float scale; // Scale value
 
 public:
     Renderer(float _scale);
+
     ~Renderer();
 
     void clear_display();
+
     void render_frame();
+
     int set_pixel(const int x, const int y);
+
     std::array<std::array<int, ROWS>, COLS> get_display_buffer();
 };
 

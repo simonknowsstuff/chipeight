@@ -81,7 +81,6 @@ void CPU::execute_instruction(const uint16_t opcode) {
     const uint8_t byte = opcode & 0x00FF;
 
     // DRW specific:
-    const uint8_t width = 8;
     const uint8_t height = opcode & 0xF;
 
     // Modern random number generator I thought would be nice to use instead of srand():
@@ -199,7 +198,7 @@ void CPU::execute_instruction(const uint16_t opcode) {
                 uint8_t sprite = memory[i + row];
 
                 // If sprite is not 0, erase the pixel
-                for (int col = 0; col < width; col++) {
+                for (int col = 0; col < SPRITE_WIDTH; col++) {
                     if ((sprite & 0x80) > 0) {
                         // Set VF to the value returned by set pixel
                         v[0xF] = _renderer.set_pixel(v[x] + col, v[y] + row);
@@ -210,9 +209,15 @@ void CPU::execute_instruction(const uint16_t opcode) {
             break;
         case 0xE000:
             switch (byte) {
-                case 0x9e: // TODO: SKP Vx
+                case 0x9e: // SKP Vx
+                    if (_input.is_key_pressed(v[x])) {
+                        pc += 2;
+                    }
                     break;
-                case 0xA1: // TODO: SKNP Vx
+                case 0xA1: // SKNP Vx
+                    if (!_input.is_key_pressed(v[x])) {
+                        pc += 2;
+                    }
                     break;
                 default:
                     break;
@@ -223,7 +228,8 @@ void CPU::execute_instruction(const uint16_t opcode) {
                 case 0x07: // LD Vx, DT
                     v[x] = delay_timer;
                     break;
-                case 0x0A: // TODO: LD Vx, K
+                case 0x0A: // LD Vx, K
+                    v[x] = _input.get_key_pressed();
                     break;
                 case 0x15: // LD DT, Vx
                     delay_timer = v[x];
@@ -234,7 +240,8 @@ void CPU::execute_instruction(const uint16_t opcode) {
                 case 0x1E: // ADD I, Vx
                     i += v[x];
                     break;
-                case 0x29: // TODO: LD F, Vx
+                case 0x29: // LD F, Vx
+                    i = v[x] * 5;
                     break;
                 case 0x33: // LD B, Vx
                     memory[i] = v[x] / 100;

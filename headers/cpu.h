@@ -1,8 +1,10 @@
 #ifndef CPU_H
 #define CPU_H
 #include <stack>
+#include <vector>
 #include "input.h"
 #include "renderer.h"
+#define SPRITE_WIDTH 8
 
 class CPU {
 private:
@@ -20,12 +22,19 @@ private:
 
 public:
     CPU(Renderer &renderer, Input &input);
+
     void cycle();
-    void load_program_into_memory(const std::vector<uint8_t>& program);
+
+    void load_program_into_memory(const std::vector<uint8_t> &program);
+
     void load_sprites_into_memory();
+
     void load_rom();
+
     void play_sound();
+
     void update_timers();
+
     void execute_instruction(const uint16_t opcode);
 };
 
