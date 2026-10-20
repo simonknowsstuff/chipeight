@@ -11,10 +11,10 @@ add_subdirectory(vendored/SDL EXCLUDE_FROM_ALL)
 add_executable(chipeight
         cpu.cpp
         main.cpp
-        keyboard.cpp
+        input.cpp
         renderer.cpp
         headers/cpu.h
-        headers/keyboard.h
+        headers/input.h
         headers/renderer.h
 )
 

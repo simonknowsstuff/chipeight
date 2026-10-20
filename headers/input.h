@@ -1,11 +1,12 @@
-#include "headers/keyboard.h"
+#ifndef KEYBOARD_H
+#define KEYBOARD_H
 #include <map>
 #include <vector>
-#include <SDL3/SDL_keyboard.h>
+#include "SDL3/SDL_events.h"
 
-std::vector<int> keys_pressed = {};
-
-Keyboard::Keyboard() {
+class Input {
+public:
+    std::vector<int> keys_pressed = {};
     const std::map<int, int> KEYMAP = {
         {SDL_SCANCODE_1, 0x1},
         {SDL_SCANCODE_2, 0x2},
@@ -24,8 +25,10 @@ Keyboard::Keyboard() {
         {SDL_SCANCODE_C, 0xB},
         {SDL_SCANCODE_V, 0xF},
     };
-}
 
-bool Keyboard::is_key_pressed(const int key_code) {
-    return keys_pressed[key_code];
-}
+    Input();
+    void handle_input(SDL_Event &event);
+    bool is_key_pressed(int key_code);
+};
+
+#endif //KEYBOARD_H

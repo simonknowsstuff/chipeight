@@ -5,16 +5,24 @@
 #include <stack>
 #include <iterator>
 
+CPU::CPU(Renderer &renderer, Input &input): _renderer(renderer), _input(input) {
+    // Assign the private renderer to the renderer passed in the constructor
+    _renderer = renderer;
+}
+
 void CPU::cycle() {
     for (int j = 0; j < speed; j++) {
-        if (!paused) {
-            const uint16_t opcode = memory[pc] << 8 | memory[pc + 1];
-            execute_instruction(opcode);
-        }
+        if (paused) { return; }
+        // Read 16 bits of instruction by shifting the first 8 bit instruction
+        // and then load the next instruction using OR on it
+        const uint16_t opcode = memory[pc] << 8 | memory[pc + 1];
+        execute_instruction(opcode); // Execute opcode obtained
     }
 }
 
 void CPU::load_program_into_memory(const std::vector<uint8_t> &program) {
+    // I've considered the program to be loaded as a big vector for now
+    // Read every line in the program and load it into memory
     const size_t program_size = program.size();
     for (int loc = 0; loc < program_size; loc++) {
         memory[0x200 + loc] = program[loc];
@@ -56,7 +64,7 @@ void CPU::load_sprites_into_memory() {
         0xF0, 0x80, 0x80, 0x80, 0xF0, // C
         0xE0, 0x90, 0x90, 0x90, 0xE0, // D
         0xF0, 0x80, 0xF0, 0x80, 0xF0, // E
-        0xF0, 0x80, 0xF0, 0x80, 0x80 // F
+        0xF0, 0x80, 0xF0, 0x80, 0x80  // F
     };
 
     for (int j = 0; j < sprites.size(); j++) {
@@ -72,6 +80,10 @@ void CPU::execute_instruction(const uint16_t opcode) {
     const uint8_t addr = opcode & 0x0FFF;
     const uint8_t byte = opcode & 0x00FF;
 
+    // DRW specific:
+    const uint8_t width = 8;
+    const uint8_t height = opcode & 0xF;
+
     // Modern random number generator I thought would be nice to use instead of srand():
     std::random_device rd;
     std::mt19937 gen(rd());
@@ -81,7 +93,8 @@ void CPU::execute_instruction(const uint16_t opcode) {
     switch (opcode & 0xF000) {
         case 0x0000:
             switch (opcode) {
-                case 0x00E0: // TODO: CLS
+                case 0x00E0: // CLS
+                    _renderer.clear_display();
                     break;
                 case 0x00EE: // RET
                     pc = stack.top();
@@ -180,7 +193,20 @@ void CPU::execute_instruction(const uint16_t opcode) {
         case 0xC000: // RND Vx, byte
             v[x] = gen() * 0xFF & byte;
             break;
-        case 0xD000: // TODO: DRW Vx, Vy, nibble
+        case 0xD000: // DRW Vx, Vy, nibble
+            v[0xF] = 0; // Set VF to 0 initially
+            for (int row = 0; row < height; row++) {
+                uint8_t sprite = memory[i + row];
+
+                // If sprite is not 0, erase the pixel
+                for (int col = 0; col < width; col++) {
+                    if ((sprite & 0x80) > 0) {
+                        // Set VF to the value returned by set pixel
+                        v[0xF] = _renderer.set_pixel(v[x] + col, v[y] + row);
+                    }
+                    sprite <<= 1;
+                }
+            }
             break;
         case 0xE000:
             switch (byte) {

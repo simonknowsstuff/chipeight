@@ -1,8 +1,8 @@
 #ifndef CPU_H
 #define CPU_H
-#include <cstdint>
-#include <random>
 #include <stack>
+#include "input.h"
+#include "renderer.h"
 
 class CPU {
 private:
@@ -15,8 +15,11 @@ private:
     uint8_t sound_timer = 0;
     int speed = 10;
     bool paused = false;
+    Renderer &_renderer;
+    Input &_input;
 
 public:
+    CPU(Renderer &renderer, Input &input);
     void cycle();
     void load_program_into_memory(const std::vector<uint8_t>& program);
     void load_sprites_into_memory();
