@@ -15,8 +15,9 @@ private:
     uint16_t pc = 0x200; // Program counter
     uint8_t delay_timer = 0;
     uint8_t sound_timer = 0;
-    int speed = 60;
     bool paused = false;
+    bool waiting_for_press = false;
+    uint8_t key_register = 0;
     Renderer &_renderer;
     Input &_input;
 
@@ -34,6 +35,8 @@ public:
     void play_sound();
 
     void update_timers();
+
+    void set_paused(bool value);
 
     void execute_instruction(const uint16_t opcode);
 };

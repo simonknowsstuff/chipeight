@@ -3,11 +3,14 @@
 #include <map>
 #include <array>
 #include "SDL3/SDL_events.h"
+#include <optional>
 #define KEYS 16
 
 class Input {
-public:
+private:
     std::array<bool, KEYS> keys_pressed = {false};
+
+public:
     const std::map<int, uint8_t> KEYMAP = {
         {SDL_SCANCODE_X, 0x0},
         {SDL_SCANCODE_1, 0x1},
@@ -29,11 +32,13 @@ public:
 
     Input();
 
-    void handle_input(SDL_Event &event);
+    void handle_input();
+
+    std::array<bool, KEYS> get_key_pressed();
 
     bool is_key_pressed(const uint8_t key_code);
 
-    uint8_t get_key_pressed();
+    std::optional<uint8_t> wait_for_key_press();
 };
 
 #endif //KEYBOARD_H

@@ -9,8 +9,8 @@ This project is licensed under the MIT license, so you're free to do whatever wi
 
 ## Tasks
 - [x] Basic CPU implemented
-- [ ] Keyboard implemented
-- [ ] Display implemented
+- [ ] Input implemented
+- [x] Display implemented
 - [ ] Sound implemented
 
 ## References used
