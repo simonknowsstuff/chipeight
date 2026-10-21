@@ -9,16 +9,26 @@ Renderer::Renderer(const float _scale) {
     scale = _scale;
 
     // Initialize a window and a renderer
-    if (!SDL_Init(SDL_INIT_VIDEO)) {
+    if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO)) {
         std::cerr << "SDL_Init failed: " << SDL_GetError() << std::endl;
         throw std::runtime_error("Unable to initialize SDL");
     }
-    window = SDL_CreateWindow("CHIP-8 Emulator", window_width, window_height, 0);
-    renderer = SDL_CreateRenderer(window, nullptr);
-    if (!window || !renderer) { // Handle SDL window or renderer creation failures
+
+    // Create SDL window and renderer
+    if (!SDL_CreateWindowAndRenderer(
+            "CHIP-8 Emulator",
+            window_width,
+            window_height,
+            0,
+            &window,
+            &renderer)
+    ) {
         std::cerr << "Window/renderer creation failed: " << SDL_GetError() << std::endl;
         throw std::runtime_error(SDL_GetError());
     }
+
+    // Wait for VSync
+    SDL_SetRenderVSync(renderer, 1);
 
     // Adjust scale
     SDL_SetRenderScale(renderer, scale, scale);
@@ -41,7 +51,7 @@ void Renderer::render_frame() {
     for (int i = 0; i < COLS; i++) {
         for (int j = 0; j < ROWS; j++) {
             if (display[i][j] > 0) {
-                const SDL_FRect rect { .x = static_cast<float>(i), .y = static_cast<float>(j), .w = 1, .h = 1 };
+                const SDL_FRect rect{.x = static_cast<float>(i), .y = static_cast<float>(j), .w = 1, .h = 1};
                 SDL_RenderRect(renderer, &rect);
                 SDL_RenderFillRect(renderer, &rect);
             }

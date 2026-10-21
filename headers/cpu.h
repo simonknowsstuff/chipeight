@@ -2,6 +2,8 @@
 #define CPU_H
 #include <stack>
 #include <vector>
+
+#include "audio.h"
 #include "input.h"
 #include "renderer.h"
 #define SPRITE_WIDTH 8
@@ -20,9 +22,10 @@ private:
     uint8_t key_register = 0;
     Renderer &_renderer;
     Input &_input;
+    Speaker &_speaker;
 
 public:
-    CPU(Renderer &renderer, Input &input);
+    CPU(Renderer &renderer, Input &input, Speaker &speaker);
 
     void cycle();
 
@@ -32,13 +35,13 @@ public:
 
     std::vector<uint8_t> load_rom(const char* filename);
 
-    void play_sound();
-
     void update_timers();
 
     void set_paused(bool value);
 
     void execute_instruction(const uint16_t opcode);
+
+    void play_sound();
 };
 
 #endif //CPU_H

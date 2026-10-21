@@ -9,7 +9,7 @@ This project is licensed under the MIT license, so you're free to do whatever wi
 
 ## Tasks
 - [x] Basic CPU implemented
-- [ ] Input implemented
+- [x] Input implemented
 - [x] Display implemented
 - [ ] Sound implemented
 

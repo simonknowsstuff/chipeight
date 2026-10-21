@@ -6,14 +6,12 @@
 #include <random>
 #include <stack>
 
-CPU::CPU(Renderer &renderer, Input &input): _renderer(renderer), _input(input) {
-    // Assign the private renderer to the renderer passed in the constructor
-    _renderer = renderer;
-}
+CPU::CPU(Renderer &renderer, Input &input, Speaker &speaker): _renderer(renderer), _input(input), _speaker(speaker) {}
 
 void CPU::cycle() {
     if (paused) { return; }
 
+    update_timers(); // Update timers every cycle
     // Wait for key press
     if (waiting_for_press) {
         const auto key = _input.wait_for_key_press();
@@ -29,14 +27,25 @@ void CPU::cycle() {
     // Read 16 bits of instruction by shifting the first 8 bit instruction
     // and then load the next instruction using OR on it
     const uint16_t opcode = memory[pc] << 8 | memory[pc + 1];
-    std::cout << pc << std::endl;
+    // std::cout << pc << std::endl;
     execute_instruction(opcode); // Execute opcode obtained
+
+    _renderer.render_frame();
+    play_sound();
+}
+
+void CPU::play_sound() {
+    if (sound_timer > 0) {
+        _speaker.play();
+    } else {
+        _speaker.stop();
+    }
 }
 
 void CPU::load_program_into_memory(const std::vector<uint8_t> &program) {
     // I've considered the program to be loaded as a big vector for now
     // Read every line in the program and load it into memory
-    constexpr size_t START_ADDRESS = 0x200;
+    constexpr size_t START_ADDRESS = 0x200; // Load program from 0x200 (CHIP-8 standard)
     if (program.size() > memory.size() - START_ADDRESS) {
         throw std::runtime_error("ROM too large for CHIP-8 memory");
     }
@@ -46,10 +55,9 @@ void CPU::load_program_into_memory(const std::vector<uint8_t> &program) {
     std::cout << "Loaded program into memory!" << std::endl;
 }
 
-// TODO: Implement loading ROM
 std::vector<uint8_t> CPU::load_rom(const char* filename) {
-    std::ifstream rom(filename, std::ios::binary);
-    if (!rom) {
+    std::ifstream rom(filename, std::ios::binary); // Read file in binary mode
+    if (!rom) { // Handle errors
         throw std::runtime_error("Failed to open ROM");
     }
 
@@ -80,11 +88,8 @@ std::vector<uint8_t> CPU::load_rom(const char* filename) {
     return rom_vec;
 }
 
-// TODO: Implement playing sound
-void CPU::play_sound() {
-}
-
 void CPU::update_timers() {
+    // Keep decrementing timers
     if (delay_timer > 0) {
         delay_timer--;
     }
@@ -114,12 +119,13 @@ void CPU::load_sprites_into_memory() {
         0xF0, 0x80, 0xF0, 0x80, 0x80  // F
     };
 
+    // Load the sprites into memory
     for (uint8_t j = 0; j < sprites.size(); j++) {
         memory[j] = sprites[j];
     }
 }
 
-void CPU::set_paused(bool value) {
+void CPU::set_paused(const bool value) {
     paused = value;
 }
 
@@ -145,7 +151,6 @@ void CPU::execute_instruction(const uint16_t opcode) {
             switch (opcode) {
                 case 0x00E0: // CLS
                     _renderer.clear_display();
-                    _renderer.render_frame();
                     return;
                 case 0x00EE: // RET
                     pc = stack.top();
@@ -256,7 +261,6 @@ void CPU::execute_instruction(const uint16_t opcode) {
                     sprite <<= 1;
                 }
             }
-            _renderer.render_frame();
             return;
         case 0xE000:
             switch (byte) {
@@ -285,6 +289,7 @@ void CPU::execute_instruction(const uint16_t opcode) {
                     delay_timer = v[x];
                     return;
                 case 0x18: // LD ST, Vx
+                    std::cout << "Sound timer set to register x" << std::endl;
                     sound_timer = v[x];
                     return;
                 case 0x1E: // ADD I, Vx

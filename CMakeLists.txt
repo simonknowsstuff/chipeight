@@ -9,13 +9,15 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIGURATION>")
 add_subdirectory(vendored/SDL EXCLUDE_FROM_ALL)
 
 add_executable(chipeight
-        cpu.cpp
         main.cpp
+        cpu.cpp
         input.cpp
         renderer.cpp
+        audio.cpp
         headers/cpu.h
         headers/input.h
         headers/renderer.h
+        headers/audio.h
 )
 
 target_link_libraries(chipeight PRIVATE SDL3::SDL3)
