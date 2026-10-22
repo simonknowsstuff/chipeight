@@ -11,7 +11,6 @@ CPU::CPU(Renderer &renderer, Input &input, Speaker &speaker): _renderer(renderer
 void CPU::cycle() {
     if (paused) { return; }
 
-    update_timers(); // Update timers every cycle
     // Wait for key press
     if (waiting_for_press) {
         const auto key = _input.wait_for_key_press();
@@ -20,17 +19,15 @@ void CPU::cycle() {
             v[key_register] = key.value();
             waiting_for_press = false;
         }
-
         return;
     }
 
     // Read 16 bits of instruction by shifting the first 8 bit instruction
     // and then load the next instruction using OR on it
     const uint16_t opcode = memory[pc] << 8 | memory[pc + 1];
-    // std::cout << pc << std::endl;
+    // std::cout << pc << " " << opcode << std::endl;
     execute_instruction(opcode); // Execute opcode obtained
 
-    _renderer.render_frame();
     play_sound();
 }
 
@@ -289,7 +286,6 @@ void CPU::execute_instruction(const uint16_t opcode) {
                     delay_timer = v[x];
                     return;
                 case 0x18: // LD ST, Vx
-                    std::cout << "Sound timer set to register x" << std::endl;
                     sound_timer = v[x];
                     return;
                 case 0x1E: // ADD I, Vx

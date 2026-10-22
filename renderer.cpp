@@ -8,7 +8,7 @@ Renderer::Renderer(const float _scale) {
     window_width = static_cast<int>(_scale) * COLS;
     scale = _scale;
 
-    // Initialize a window and a renderer
+    // Initialize SDL video and audio
     if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO)) {
         std::cerr << "SDL_Init failed: " << SDL_GetError() << std::endl;
         throw std::runtime_error("Unable to initialize SDL");
@@ -19,10 +19,10 @@ Renderer::Renderer(const float _scale) {
             "CHIP-8 Emulator",
             window_width,
             window_height,
-            0,
+            0, // The window shouldn't be resizable
             &window,
             &renderer)
-    ) {
+    ) { // Handle errors
         std::cerr << "Window/renderer creation failed: " << SDL_GetError() << std::endl;
         throw std::runtime_error(SDL_GetError());
     }
@@ -51,13 +51,19 @@ void Renderer::render_frame() {
     for (int i = 0; i < COLS; i++) {
         for (int j = 0; j < ROWS; j++) {
             if (display[i][j] > 0) {
-                const SDL_FRect rect{.x = static_cast<float>(i), .y = static_cast<float>(j), .w = 1, .h = 1};
+                const SDL_FRect rect{
+                    // All parameters have to be floats:
+                    .x = static_cast<float>(i),
+                    .y = static_cast<float>(j),
+                    .w = 1.0f,
+                    .h = 1.0f
+                };
                 SDL_RenderRect(renderer, &rect);
                 SDL_RenderFillRect(renderer, &rect);
             }
         }
     }
-    SDL_RenderPresent(renderer);
+    SDL_RenderPresent(renderer); // Finally, render it on the renderer
 }
 
 void Renderer::clear_display() {
@@ -70,9 +76,9 @@ void Renderer::clear_display() {
 }
 
 int Renderer::set_pixel(const int x, const int y) {
-    // Draw a white pixel in the given (x, y) coordinates
-    const int _x = ((x % COLS) + COLS) % COLS;
-    const int _y = ((y % ROWS) + ROWS) % ROWS;
+    // Draw a white pixel in the given (x, y) coordinates with wrapping
+    const int _x = (x % COLS + COLS) % COLS;
+    const int _y = (y % ROWS + ROWS) % ROWS;
 
     display[_x][_y] ^= 1; // Perform XOR on the particular coordinate of the display
     return !display[_x][_y]; // Return true if pixel was erased

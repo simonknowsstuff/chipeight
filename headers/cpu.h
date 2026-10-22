@@ -7,6 +7,7 @@
 #include "input.h"
 #include "renderer.h"
 #define SPRITE_WIDTH 8
+#define CYCLE_SPEED 2
 
 class CPU {
 private:

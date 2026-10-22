@@ -25,9 +25,14 @@ int main(int argc, char *argv[]) {
 
     // Main loop
     while (true) {
-        cpu.cycle(); // Execute a cycle in the CPU
+        cpu.update_timers();
+        // Setting cycles to be faster by a few subticks
+        for (int i = 0; i < CYCLE_SPEED; i++) {
+            cpu.cycle(); // Execute a cycle in the CPU
+        }
         input.handle_input(); // Handle input
         speaker.update(); // Update speaker
+        renderer.render_frame(); // Render frame
 
         // Older implementation:
         // It resulted in less smoother performance compared to VSync

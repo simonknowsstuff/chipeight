@@ -11,10 +11,12 @@ This project is licensed under the MIT license, so you're free to do whatever wi
 - [x] Basic CPU implemented
 - [x] Input implemented
 - [x] Display implemented
-- [ ] Sound implemented
+- [x] Sound implemented (Needs to be cleaner)
 
 ## References used
 - https://www.freecodecamp.org/news/creating-your-very-own-chip-8-emulator/
 - http://devernay.free.fr/hacks/chip8/C8TECH10.HTM
+- https://github.com/libsdl-org/SDL/blob/main/examples/audio/01-simple-playback/simple-playback.c
+- https://tobiasvl.github.io/blog/write-a-chip-8-emulator
 
 Special thanks to [Technohacker](https://github.com/Technohacker) for guiding me through this project!

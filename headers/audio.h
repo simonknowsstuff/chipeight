@@ -6,7 +6,7 @@
 class Speaker {
 private:
     const float FREQUENCY = 440.0f;
-    const float SAMPLE_RATE = 48000.0f;
+    const float SAMPLE_RATE = 8000.0f;
     float _phase = 0.0f;
     int current_sine_sample = 0;
     bool sound_enabled = false;
@@ -15,6 +15,8 @@ private:
 
 public:
     Speaker();
+
+    ~Speaker();
 
     void play();
 

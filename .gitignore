@@ -69,3 +69,6 @@ Testing/
 
 # ROM directory
 roms/
+
+# CLion
+.idea/
