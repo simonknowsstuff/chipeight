@@ -19,7 +19,7 @@ private:
     uint8_t delay_timer = 0;
     uint8_t sound_timer = 0;
     bool paused = false;
-    bool waiting_for_press = false;
+    bool waiting_for_press = false; // Non blocking input waiting
     uint8_t key_register = 0;
     Renderer &_renderer;
     Input &_input;

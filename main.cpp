@@ -1,5 +1,4 @@
 #include <iostream>
-#include <bits/this_thread_sleep.h>
 #include "headers/cpu.h"
 #include "headers/input.h"
 #include "headers/renderer.h"
@@ -17,6 +16,8 @@ int main(int argc, char *argv[]) {
     if (argc >= 2) {
         std::cout << "Loading ROM: " << argv[1] << std::endl; // Assuming this is the ROM
         rom = cpu.load_rom(argv[1]);
+    } else {
+        throw std::runtime_error("No ROM provided");
     }
 
     // Load sprites and ROM into CPU memory
@@ -25,8 +26,8 @@ int main(int argc, char *argv[]) {
 
     // Main loop
     while (true) {
-        cpu.update_timers();
-        // Setting cycles to be faster by a few subticks
+        cpu.update_timers(); // Update timers in accordance to the refresh rate
+        // Setting cycles to be faster by a few subticks:
         for (int i = 0; i < CYCLE_SPEED; i++) {
             cpu.cycle(); // Execute a cycle in the CPU
         }

@@ -11,6 +11,7 @@ private:
     std::array<bool, KEYS> keys_pressed = {false};
 
 public:
+    // Keymaps for the CHIP-8 emulator. Left side of the keyboard by default.
     const std::map<int, uint8_t> KEYMAP = {
         {SDL_SCANCODE_X, 0x0},
         {SDL_SCANCODE_1, 0x1},

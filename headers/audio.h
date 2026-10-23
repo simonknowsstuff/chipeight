@@ -10,6 +10,7 @@ private:
     float _phase = 0.0f;
     int current_sine_sample = 0;
     bool sound_enabled = false;
+    // Initialize required SDL audio variables
     SDL_AudioStream *stream = nullptr;
     SDL_AudioSpec spec{};
 

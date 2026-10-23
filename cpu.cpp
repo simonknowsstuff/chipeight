@@ -32,6 +32,8 @@ void CPU::cycle() {
 }
 
 void CPU::play_sound() {
+    // According to CHIP 8 instructions, we play sound when the timer value
+    // is above 0 and stop as soon as 0 is reached
     if (sound_timer > 0) {
         _speaker.play();
     } else {
@@ -86,7 +88,7 @@ std::vector<uint8_t> CPU::load_rom(const char* filename) {
 }
 
 void CPU::update_timers() {
-    // Keep decrementing timers
+    // Decrement timers by 1
     if (delay_timer > 0) {
         delay_timer--;
     }

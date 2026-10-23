@@ -11,6 +11,7 @@ private:
     int window_height = COLS; // Window height
     int window_width = ROWS; // Window width
     float scale; // Scale value
+    // Initialize required SDL variables
     SDL_Window *window = nullptr;
     SDL_Renderer *renderer = nullptr;
 

@@ -8,7 +8,7 @@ Renderer::Renderer(const float _scale) {
     window_width = static_cast<int>(_scale) * COLS;
     scale = _scale;
 
-    // Initialize SDL video and audio
+    // Initialize SDL video and audio (for speaker)
     if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO)) {
         std::cerr << "SDL_Init failed: " << SDL_GetError() << std::endl;
         throw std::runtime_error("Unable to initialize SDL");
@@ -26,6 +26,9 @@ Renderer::Renderer(const float _scale) {
         std::cerr << "Window/renderer creation failed: " << SDL_GetError() << std::endl;
         throw std::runtime_error(SDL_GetError());
     }
+
+    // Set metadata
+    SDL_SetAppMetadata("chipeight emulator", "1.0.0", "com.knowsstuff.chipeight");
 
     // Wait for VSync
     SDL_SetRenderVSync(renderer, 1);

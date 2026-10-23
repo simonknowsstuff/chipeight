@@ -10,13 +10,14 @@ Input::Input() {
 
 void Input::handle_input() {
     SDL_Event event;
-    while (SDL_PollEvent(&event)) {
+    while (SDL_PollEvent(&event)) { // Poll for all event types
         switch (event.type) {
-            case SDL_EVENT_QUIT:
+            case SDL_EVENT_QUIT: // When window is closed
                 exit(0);
                 break;
             case SDL_EVENT_KEY_DOWN:
                 try {
+                    // Check if key exists and if it does, change value to true for that item in the array
                     const uint8_t mapped_code = KEYMAP.at(event.key.scancode);
                     keys_pressed[mapped_code] = true;
                 } catch (std::out_of_range) {
@@ -25,10 +26,11 @@ void Input::handle_input() {
                 break;
             case SDL_EVENT_KEY_UP:
                 try {
+                    // Similar to KEY_DOWN, except it's false
                     const uint8_t mapped_code = KEYMAP.at(event.key.scancode);
                     keys_pressed[mapped_code] = false;
                 } catch (std::out_of_range) {
-                    // Same as KEY_DOWN
+                    // Ignore
                 }
                 break;
             default:

@@ -22,6 +22,7 @@ Speaker::Speaker() {
 }
 
 Speaker::~Speaker() {
+    // Probably isn't required, but kept in regardless
     if (stream) {
         SDL_DestroyAudioStream(stream);
     }
