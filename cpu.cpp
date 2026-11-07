@@ -120,7 +120,7 @@ void CPU::load_sprites_into_memory() {
 
     // Load the sprites into memory
     for (uint8_t j = 0; j < sprites.size(); j++) {
-        memory[j] = sprites[j];
+        memory[0x50 + j] = sprites[j];
     }
 }
 
