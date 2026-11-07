@@ -208,7 +208,7 @@ void CPU::execute_instruction(const uint16_t opcode) {
                     return;
                 case 0x5: // SUB Vx, Vy
                     v[0xF] = 0;
-                    if (v[x] > v[y]) {
+                    if (v[x] >= v[y]) {
                         v[0xF] = 1;
                     }
                     v[x] -= v[y];
@@ -219,13 +219,13 @@ void CPU::execute_instruction(const uint16_t opcode) {
                     return;
                 case 0x7: // SUBN Vx, Vy
                     v[0xF] = 0;
-                    if (v[y] > v[x]) {
+                    if (v[y] >= v[x]) {
                         v[0xF] = 1;
                     }
                     v[x] = v[y] - v[x];
                     return;
                 case 0xE: // SHL Vx {, Vy}
-                    v[0xF] = v[x] & 0x80;
+                    v[0xF] = (v[x] & 0x80) >> 7;
                     v[x] <<= 1;
                     return;
             }
@@ -239,7 +239,7 @@ void CPU::execute_instruction(const uint16_t opcode) {
             i = addr;
             return;
         case 0xB000: // JP V0, addr
-            pc = addr + pc;
+            pc = addr + v[0];
             return;
         case 0xC000: // RND Vx, byte
             v[x] = gen() * 0xFF & byte;
@@ -294,7 +294,7 @@ void CPU::execute_instruction(const uint16_t opcode) {
                     i += v[x];
                     return;
                 case 0x29: // LD F, Vx
-                    i = v[x] * 5;
+                    i = 0x50 + (v[x] * 5);
                     return;
                 case 0x33: // LD B, Vx
                     memory[i] = v[x] / 100;
